@@ -2,7 +2,7 @@
 Exports Tomboy Notes to Evernote Format.
 
 # Add feature
-## Traverse nested directories by os.walk.
+ - Traverse nested directories by os.walk.
 
 # Usage
 ```bash
