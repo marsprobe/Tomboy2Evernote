@@ -7,6 +7,31 @@ import glob
 import os
 
 
+
+
+def process_files_nested(inputdir, outputdir):
+    os.chdir(inputdir)
+    enex_notes = []
+    output_filename = 'Tomboy2Evernote.enex'
+    i = 0
+    for root,dirs,files in os.walk(inputdir):
+        for fn in files:
+            name, ext = os.path.splitext(fn)
+            if ext == '.note':
+                note_file_path = os.path.join(root, fn)
+                note_body = open(note_file_path, 'r').read()
+                title = get_title(note_body)
+                html_note_body = get_html_body(note_body)
+                created_date = tomboy_to_enex_date(get_created_date(note_body))
+                updated_date = tomboy_to_enex_date(get_updated_date(note_body))
+                enex_notes.append(make_enex(title, html_note_body, created_date, updated_date))
+                i += 1
+    multi_enex_body = make_multi_enex(enex_notes)
+    save_to_file(outputdir, output_filename, multi_enex_body)
+    print "Exported notes count: " + `i`
+    print "Evernote file location: " + outputdir + "/" + output_filename
+
+
 def process_files(inputdir, outputdir):
     os.chdir(inputdir)
     enex_notes = []
@@ -172,7 +197,8 @@ def exit_with_error():
 
 def main(argv):
     inputdir, outputdir = get_input_params(argv)
-    process_files(inputdir, outputdir)
+    #process_files(inputdir, outputdir)
+    process_files_nested(inputdir, outputdir)
 
 
 if __name__ == "__main__":
